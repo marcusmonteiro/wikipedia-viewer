@@ -1,15 +1,19 @@
 import React from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import { TextField } from 'material-ui'
+import { TextField, IconButton } from 'material-ui'
 
-export default function SearchBox ({hintText}) {
+export default function SearchBox ({hintText, func}) {
   return (
     <MuiThemeProvider>
-      <TextField hintText={hintText} />
+      <div>
+        <TextField hintText={hintText} />
+        <IconButton iconClassName='fa fa-search' onClick={func} />
+      </div>
     </MuiThemeProvider>
   )
 }
 
 SearchBox.propTypes = {
-  hintText: React.PropTypes.string
+  hintText: React.PropTypes.string,
+  func: React.PropTypes.func.isRequired
 }
