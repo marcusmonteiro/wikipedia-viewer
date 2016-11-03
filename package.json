@@ -25,15 +25,22 @@
   },
   "private": true,
   "devDependencies": {
+    "enzyme": "^2.5.1",
+    "nock": "^9.0.2",
+    "react-addons-test-utils": "^15.3.2",
     "react-scripts": "0.7.0",
+    "sinon": "^1.17.6",
     "snazzy": "^5.0.0",
     "standard": "^8.5.0",
     "stylelint": "^7.5.0",
     "stylelint-config-standard": "^14.0.0"
   },
   "dependencies": {
+    "material-ui": "^0.16.1",
     "react": "^15.3.2",
-    "react-dom": "^15.3.2"
+    "react-dom": "^15.3.2",
+    "react-tap-event-plugin": "^1.0.0",
+    "superagent": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
