@@ -21,9 +21,20 @@ describe('SearchBox component', () => {
     expect(wrapper.find('TextField').props().hintText).toBe(hintText)
   })
 
+  it('should call a function passed as props when the text field value is changed', () => {
+    const foo = sandbox.stub()
+    const wrapper = mount(<SearchBox textFieldChangeHandler={foo} />)
+    wrapper.find('TextField').simulate('change', {
+      target: {
+        value: 'changed'
+      }
+    })
+    expect(foo.calledOnce).toBe(true)
+  })
+
   it('should call a function passed as props when the search icon is clicked', () => {
     const foo = sandbox.stub()
-    const wrapper = mount(<SearchBox func={foo} />)
+    const wrapper = mount(<SearchBox searchIconClickHandler={foo} />)
     wrapper.find('IconButton').simulate('click')
     expect(foo.calledOnce).toBe(true)
   })

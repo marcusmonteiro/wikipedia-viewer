@@ -2,12 +2,12 @@ import React from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { TextField, IconButton } from 'material-ui'
 
-export default function SearchBox ({hintText, func}) {
+export default function SearchBox ({hintText, textFieldChangeHandler, searchIconClickHandler}) {
   return (
     <MuiThemeProvider>
       <div>
-        <TextField hintText={hintText} />
-        <IconButton iconClassName='fa fa-search' onClick={func} />
+        <TextField hintText={hintText} onChange={textFieldChangeHandler} />
+        <IconButton iconClassName='fa fa-search' onClick={searchIconClickHandler} />
       </div>
     </MuiThemeProvider>
   )
@@ -15,5 +15,6 @@ export default function SearchBox ({hintText, func}) {
 
 SearchBox.propTypes = {
   hintText: React.PropTypes.string,
-  func: React.PropTypes.func.isRequired
+  textFieldChangeHandler: React.PropTypes.func.isRequired,
+  searchIconClickHandler: React.PropTypes.func.isRequired
 }

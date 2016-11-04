@@ -270,9 +270,11 @@ describe('getSearchEntriesLinks', () => {
 
     const expectedOffset = mockFirstSearchResponse.continue.sroffset
     expect(searchEntriesLinks.offset).toBe(expectedOffset)
+
+    expect(getFirstSearchEntriesAjax.isDone()).toBe(true)
   })
 
-  it('should return a different list when the called with an offset argument', async () => {
+  it('should return a different list when the called with a continue and an offset argument', async () => {
     const searchEntriesLinks = await getSearchEntriesLinks('Albert Einstein', '-||', 10)
 
     expect(searchEntriesLinks.entriesLinks.length).toBe(mockContinueSearchResponse.query.search.length)
@@ -289,6 +291,8 @@ describe('getSearchEntriesLinks', () => {
 
     const expectedOffset = mockContinueSearchResponse.continue.sroffset
     expect(searchEntriesLinks.offset).toBe(expectedOffset)
+
+    expect(getContinueSearchEntriesAjax.isDone()).toBe(true)
   })
 })
 
@@ -305,17 +309,23 @@ describe('WikipediaViewerContainer container', () => {
   })
 
   it('should search Wikipedia for entries with the search term from the SearchBox', () => {
-    sandbox.spy(WikipediaViewerContainer.prototype, 'setEntriesLinks')
-
     const wrapper = mount(<WikipediaViewerContainer />)
-
     wrapper.setState({randomEntryLink: 'foo'})
 
-    wrapper.find('TextField').setProps({
-      value: 'value'
+    sandbox.spy(WikipediaViewerContainer.prototype, 'handleTextFieldChange')
+    wrapper.find('TextField').simulate('change', {
+      target: {
+        value: 'change'
+      }
     })
+    expect(WikipediaViewerContainer.prototype.handleTextFieldChange.called).toBe(true)
 
+    sandbox.spy(WikipediaViewerContainer.prototype, 'setEntriesLinks')
+    sandbox.spy(WikipediaViewerContainer.prototype, 'handleSearchIconClick')
+    wrapper.find('IconButton').simulate('click')
+    expect(WikipediaViewerContainer.prototype.handleSearchIconClick.callCount).toBe(1)
     expect(WikipediaViewerContainer.prototype.setEntriesLinks.callCount).toBe(1)
-    expect(getFirstSearchEntriesAjax.done()).toBe(true)
+
+    expect(getFirstSearchEntriesAjax.isDone()).toBe(true)
   })
 })
