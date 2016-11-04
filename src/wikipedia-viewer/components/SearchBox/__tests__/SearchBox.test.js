@@ -14,7 +14,7 @@ afterEach(() => {
   sandbox.restore()
 })
 
-describe('SearchBox component', () => {
+describe('<SearchBox />', () => {
   it('should show a hintText when one is passed as props', () => {
     const hintText = 'foo'
     const wrapper = shallow(<SearchBox hintText={hintText} />)
@@ -24,7 +24,7 @@ describe('SearchBox component', () => {
   it('should call a function passed as props when the text field value is changed', () => {
     const foo = sandbox.stub()
     const wrapper = mount(<SearchBox textFieldChangeHandler={foo} />)
-    wrapper.find('TextField').simulate('change', {
+    wrapper.find('TextField').find('input').simulate('change', {
       target: {
         value: 'changed'
       }
