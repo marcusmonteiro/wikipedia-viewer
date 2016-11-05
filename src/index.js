@@ -8,11 +8,7 @@ import 'font-awesome/css/font-awesome.min.css'
 
 injectTapEventPlugin()
 
-const MuiApp = () => (
-  <App />
-)
-
 ReactDOM.render(
-  <MuiApp />,
+  <App />,
   document.getElementById('root')
 )

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import request from 'superagent'
-import { SearchBox } from '../../components'
+import { SearchBox, LinksList } from '../../components'
 
 export async function getRandomEntryLink () {
   const randomEntryAPIUri = 'https://en.wikipedia.org/w/api.php?action=query&list=random&rnlimit=1&format=json&origin=*'
@@ -37,8 +37,11 @@ export async function getSearchEntriesLinks (searchTerm, _continue, offset = 0) 
       result.continue = res.body.continue.continue
       result.offset = res.body.continue.sroffset
       res.body.query.search.forEach((entry) => {
-        const entryTitle = entry.title
-        const entryLink = `${entryBaseUri}${entryTitle}`
+        const entryDescription = entry.title
+        const entryLink = {
+          description: entryDescription,
+          href: `${entryBaseUri}${entryDescription}`
+        }
         result.entriesLinks.push(entryLink)
       })
     })
@@ -94,6 +97,11 @@ export default class WikipediaViewerContainer extends Component {
     if (this.state.randomEntryLink === null) {
       return <p>Loading..</p>
     }
+    console.log(this.state.entriesLinks)
+    let linksList
+    if (this.state.entriesLinks !== null) {
+      linksList = <LinksList links={this.state.entriesLinks} />
+    }
     return (
       <div>
         <p><a href={this.state.randomEntryLink}><button>Random</button></a></p>
@@ -102,6 +110,7 @@ export default class WikipediaViewerContainer extends Component {
           textFieldChangeHandler={this.handleTextFieldChange}
           searchIconClickHandler={this.handleSearchIconClick}
         />
+        {linksList}
       </div>
     )
   }

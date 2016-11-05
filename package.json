@@ -25,6 +25,8 @@
   },
   "private": true,
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-enzyme": "^0.5.2",
     "enzyme": "^2.5.1",
     "nock": "^9.0.2",
     "react-addons-test-utils": "^15.3.2",
