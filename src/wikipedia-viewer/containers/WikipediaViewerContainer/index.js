@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import request from 'superagent'
+import { Grid, Row, Col } from 'react-bootstrap'
+import { RaisedButton, FontIcon } from 'material-ui'
 import { SearchBox, LinksList, PreviousNext } from '../../components'
 
 export async function getRandomEntryLink () {
@@ -19,6 +21,9 @@ export async function getRandomEntryLink () {
 }
 
 export async function getSearchEntriesLinks (searchTerm, _continue, offset = 0) {
+  if (!searchTerm) {
+    return
+  }
   let searchAPIUri
   if (typeof _continue === 'string') {
     searchAPIUri = `https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=${searchTerm}&continue=${_continue}&sroffset=${offset}&origin=*`
@@ -80,9 +85,15 @@ export default class WikipediaViewerContainer extends Component {
 
   async setEntriesLinks (searchTerm, _continue, offset) {
     const entriesLinks = await getSearchEntriesLinks(searchTerm,  _continue, offset)
-    this.setState({
-      entriesLinks
-    })
+    if (entriesLinks) {
+      this.setState({
+        entriesLinks
+      })
+    } else {
+      this.setState({
+        entriesLinks: null
+      })
+    }
   }
 
   handleTextFieldChange (e) {
@@ -128,15 +139,28 @@ export default class WikipediaViewerContainer extends Component {
       )
     }
     return (
-      <div>
-        <p><a href={this.state.randomEntryLink}><button>Random</button></a></p>
-        <SearchBox
-          hintText={'Search Wikipedia...'}
-          textFieldChangeHandler={this.handleTextFieldChange}
-          searchIconClickHandler={this.handleSearchIconClick}
-        />
+      <Grid>
+        <Row>
+          <Col>
+          <a href={this.state.randomEntryLink}>
+            <RaisedButton
+              label='random article'
+              icon={<FontIcon className='fa fa-wikipedia-w' />}
+            />
+          </a>
+          </Col>
+          <Col>
+          <SearchBox
+            hintText={'Search Wikipedia...'}
+            textFieldChangeHandler={this.handleTextFieldChange}
+            searchIconClickHandler={this.handleSearchIconClick}
+          />
+          </Col>
+        </Row>
+        <Row>
         {linksList}
-      </div>
+        </Row>
+      </Grid>
     )
   }
 }
