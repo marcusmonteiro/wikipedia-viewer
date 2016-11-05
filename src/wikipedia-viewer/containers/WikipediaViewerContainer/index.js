@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import request from 'superagent'
-import { SearchBox, LinksList } from '../../components'
+import { SearchBox, LinksList, PreviousNext } from '../../components'
 
 export async function getRandomEntryLink () {
   const randomEntryAPIUri = 'https://en.wikipedia.org/w/api.php?action=query&list=random&rnlimit=1&format=json&origin=*'
@@ -63,6 +63,8 @@ export default class WikipediaViewerContainer extends Component {
     this.setEntriesLinks = this.setEntriesLinks.bind(this)
     this.handleTextFieldChange = this.handleTextFieldChange.bind(this)
     this.handleSearchIconClick = this.handleSearchIconClick.bind(this)
+    this.handleNextButtonClick = this.handleNextButtonClick.bind(this)
+    this.handlePreviousButtonClick = this.handlePreviousButtonClick.bind(this)
   }
 
   componentDidMount () {
@@ -77,7 +79,7 @@ export default class WikipediaViewerContainer extends Component {
   }
 
   async setEntriesLinks (searchTerm, _continue, offset) {
-    const entriesLinks = await getSearchEntriesLinks(searchTerm)
+    const entriesLinks = await getSearchEntriesLinks(searchTerm,  _continue, offset)
     this.setState({
       entriesLinks
     })
@@ -93,14 +95,37 @@ export default class WikipediaViewerContainer extends Component {
     this.setEntriesLinks(this.state.textFieldValue)
   }
 
+  handleNextButtonClick (e) {
+    this.setEntriesLinks(
+      this.state.textFieldValue,
+      this.state.entriesLinks.continue,
+      this.state.entriesLinks.offset
+    )
+  }
+
+  handlePreviousButtonClick (e) {
+    let offset = Math.max(0, this.state.entriesLinks.offset - 20)
+    if (this.state.entriesLinks.offset)
+    this.setEntriesLinks(
+      this.state.textFieldValue,
+      this.state.entriesLinks.continue,
+      offset
+    )
+  }
+
   render () {
     if (this.state.randomEntryLink === null) {
       return <p>Loading..</p>
     }
-    console.log(this.state.entriesLinks)
     let linksList
     if (this.state.entriesLinks !== null) {
-      linksList = <LinksList links={this.state.entriesLinks} />
+      linksList = (
+        <div>
+          <LinksList links={this.state.entriesLinks.entriesLinks} />
+          <PreviousNext previousFunc={this.handlePreviousButtonClick}
+            nextFunc={this.handleNextButtonClick} />
+        </div>
+      )
     }
     return (
       <div>

@@ -47,6 +47,6 @@ describe('<LinksList />', () => {
   test('if a header is passed as props, it should render it', () => {
     const header = 'header'
     const wrapper = shallow(<LinksList header={header} links={links} />)
-    chai.expect(wrapper).to.contain.text(header)
+    chai.expect(wrapper.find('Subheader')).to.contain.text(header)
   })
 })

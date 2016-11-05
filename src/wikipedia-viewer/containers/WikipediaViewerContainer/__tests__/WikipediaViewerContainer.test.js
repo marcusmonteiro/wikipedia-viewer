@@ -260,7 +260,10 @@ describe('getSearchEntriesLinks', () => {
     const expectedEntriesLinks = mockFirstSearchResponse.query.search.map((entry) => {
       const entryBaseUri = 'https://en.wikipedia.org/wiki/'
       const entryTitle = entry.title
-      const entryLink = `${entryBaseUri}${entryTitle}`
+      const entryLink = {
+        description: entryTitle,
+        href: `${entryBaseUri}${entryTitle}`
+      }
       return entryLink
     })
     expect(searchEntriesLinks.entriesLinks).toEqual(expectedEntriesLinks)
@@ -281,7 +284,10 @@ describe('getSearchEntriesLinks', () => {
     const expectedEntriesLinks = mockContinueSearchResponse.query.search.map((entry) => {
       const entryBaseUri = 'https://en.wikipedia.org/wiki/'
       const entryTitle = entry.title
-      const entryLink = `${entryBaseUri}${entryTitle}`
+      const entryLink = {
+        description: entryTitle,
+        href: `${entryBaseUri}${entryTitle}`
+      }
       return entryLink
     })
     expect(searchEntriesLinks.entriesLinks).toEqual(expectedEntriesLinks)
@@ -310,5 +316,47 @@ describe('<WikipediaViewerContainer />', () => {
 
   it('should search Wikipedia for entries with the search term from the SearchBox', () => {
     // TODO
+  })
+
+  it('should render a list of Wikipedia links once they were fetched', async () => {
+    const wrapper = mount(<WikipediaViewerContainer />)
+    const searchEntriesLinks = await getSearchEntriesLinks('Albert Einstein')
+    wrapper.setState({
+      entriesLinks: searchEntriesLinks
+    })
+    wrapper.update()
+    expect(wrapper.find('LinksList').length).toBe(1)
+  })
+
+  it(`should have 'next' and 'previous button at the end of the LinksList`, async () => {
+    const wrapper = mount(<WikipediaViewerContainer />)
+    const searchEntriesLinks = await getSearchEntriesLinks('Albert Einstein')
+    wrapper.setState({
+      entriesLinks: searchEntriesLinks
+    })
+    wrapper.update()
+    expect(wrapper.find('PreviousNext').length).toBe(1)
+  })
+
+  it('should update the entries links list when the next or the previous buttons are clicked', async () => {
+    sandbox.spy(WikipediaViewerContainer.prototype, 'handleNextButtonClick')
+    sandbox.spy(WikipediaViewerContainer.prototype, 'handlePreviousButtonClick')
+
+    const wrapper = mount(<WikipediaViewerContainer />)
+
+    const searchEntriesLinks = await getSearchEntriesLinks('Albert Einstein')
+    wrapper.setState({
+      entriesLinks: searchEntriesLinks
+    })
+    wrapper.update()
+    const previousNext = wrapper.find('PreviousNext')
+
+    const nextButton = previousNext.find('IconButton').last()
+    nextButton.simulate('click')
+    expect(WikipediaViewerContainer.prototype.handleNextButtonClick.callCount).toBe(1)
+
+    const previousButton = previousNext.find('IconButton').first()
+    previousButton.simulate('click')
+    expect(WikipediaViewerContainer.prototype.handlePreviousButtonClick.callCount).toBe(1)
   })
 })

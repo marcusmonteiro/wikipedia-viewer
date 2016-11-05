@@ -1,13 +1,13 @@
 import React, { PropTypes } from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-// import { Subheader } from 'material-ui'
+import { Subheader } from 'material-ui'
 import { List, ListItem } from 'material-ui/List'
 
 export default function LinksList ({header, links}) {
   return (
-    <div>
-      {header}
-      <MuiThemeProvider>
+    <MuiThemeProvider>
+      <div>
+        <Subheader>{header}</Subheader>
         <List>
           {links.map((link, idx) => {
             return (
@@ -19,8 +19,8 @@ export default function LinksList ({header, links}) {
             )
           })}
         </List>
-      </MuiThemeProvider>
-    </div>
+      </div>
+    </MuiThemeProvider>
   )
 }
 
